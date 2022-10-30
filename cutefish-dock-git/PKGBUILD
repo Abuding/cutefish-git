@@ -1,0 +1,30 @@
+pkgname=cutefish-dock-git
+pkgver=0.8.r3.g23d8ac3
+pkgrel=1
+pkgdesc="CutefishOS application dock"
+arch=('x86_64')
+url="https://github.com/cutefishos/dock"
+license=('GPL')
+groups=('cutefish-git')
+depends=('kwindowsystem' 'qt5-declarative')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-x11extras' 'qt5-tools' 'qt5-quickcontrols2')
+provides=('cutefish-dock')
+conflicts=('cutefish-dock')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd dock
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd dock
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd dock
+  make DESTDIR="$pkgdir" install
+}

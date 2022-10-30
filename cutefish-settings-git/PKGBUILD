@@ -1,0 +1,30 @@
+pkgname=cutefish-settings-git
+pkgver=0.8.r3.g1b50a53
+pkgrel=1
+pkgdesc="System Settings application for Cutefish Desktop"
+arch=('x86_64')
+url="https://github.com/cutefishos/settings"
+license=('GPL')
+groups=('cutefish-git')
+depends=('qt5-x11extras' 'libxcursor' 'kconfig' 'qt5-declarative')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-quickcontrols2' 'qt5-tools' 'networkmanager-qt' 'modemmanager-qt')
+provides=('cutefish-settings')
+conflicts=('cutefish-settings')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd settings
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd settings
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd settings
+  make DESTDIR="$pkgdir" install
+}

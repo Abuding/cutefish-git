@@ -1,0 +1,30 @@
+pkgname=cutefish-qt-plugins-git
+pkgver=0.5.r3.gd281e9c
+pkgrel=1
+pkgdesc="Unify Qt application style of CutefishOS"
+arch=('x86_64')
+url="https://github.com/cutefishos/qt-plugins"
+license=('GPL')
+groups=('cutefish-git')
+depends=('qt5-quickcontrols2' 'libdbusmenu-qt5' 'libqtxdg' 'kwindowsystem')
+makedepends=('git' 'cmake' 'ninja' 'qt5-base' 'qt5-x11extras' 'extra-cmake-modules')
+provides=('cutefish-qt-plugins')
+conflicts=('cutefish-qt-plugins')
+source=("git+https://github.com/Abuding/qt-plugins.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd qt-plugins
+  git describe --tags --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd qt-plugins
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr .
+  ninja
+}
+
+package() {
+  cd qt-plugins
+  DESTDIR="$pkgdir" ninja install
+}

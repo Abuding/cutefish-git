@@ -1,0 +1,30 @@
+pkgname=cutefish-statusbar-git
+pkgver=0.7.r19.g2f78397
+pkgrel=1
+pkgdesc="Top status bar of CutefishOS"
+arch=('x86_64')
+url="https://github.com/cutefishos/statusbar"
+license=('GPL')
+groups=('cutefish-git')
+depends=('qt5-declarative' 'kwindowsystem')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-x11extras' 'qt5-tools' 'qt5-quickcontrols2')
+provides=('cutefish-statusbar')
+conflicts=('cutefish-statusbar')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd statusbar
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd statusbar
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd statusbar
+  make DESTDIR="$pkgdir" install
+}

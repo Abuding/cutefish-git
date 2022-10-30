@@ -1,0 +1,30 @@
+pkgname=cutefish-core-git
+pkgver=0.8.r8.g80ff63a
+pkgrel=1
+pkgdesc="System components and backend of CutefishOS"
+arch=('x86_64')
+url="https://github.com/cutefishos/core"
+license=('GPL')
+groups=('cutefish-git')
+depends=('libxtst' 'libxcursor' 'polkit-qt5' 'kidletime' 'qt5-declarative' 'kwindowsystem' 'kcoreaddons')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-quickcontrols2' 'qt5-x11extras' 'qt5-tools' 'xf86-input-libinput' 'xorg-server-devel' 'xf86-input-synaptics')
+provides=('cutefish-core')
+conflicts=('cutefish-core')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd core
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd core
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd core
+  make DESTDIR="$pkgdir" install
+}

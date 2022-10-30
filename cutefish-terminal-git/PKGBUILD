@@ -1,0 +1,30 @@
+pkgname=cutefish-terminal-git
+pkgver=0.7.r37.gdecf981
+pkgrel=1
+pkgdesc="A terminal emulator for Cutefish"
+arch=('x86_64')
+url="https://github.com/cutefishos/terminal"
+license=('GPL')
+groups=('cutefish-git')
+depends=('qt5-declarative')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-quickcontrols2' 'qt5-tools')
+provides=('cutefish-terminal')
+conflicts=('cutefish-terminal')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd terminal
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd terminal
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd terminal
+  make DESTDIR="$pkgdir" install
+}

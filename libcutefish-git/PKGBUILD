@@ -1,0 +1,29 @@
+pkgname=libcutefish-git
+pkgver=0.7.r3.g6bf2df8
+pkgrel=1
+pkgdesc="System library for Cutefish applications"
+arch=('x86_64')
+url="https://github.com/cutefishos/libcutefish"
+license=('GPL')
+depends=('qt5-sensors' 'bluez-qt' 'libkscreen' 'networkmanager-qt' 'kcoreaddons' 'libcanberra')
+makedepends=('git' 'cmake' 'ninja' 'qt5-base' 'qt5-declarative' 'qt5-quickcontrols2' 'modemmanager-qt' 'kio')
+provides=('libcutefish')
+conflicts=('libcutefish')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd libcutefish
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd libcutefish
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr .
+  ninja
+}
+
+package() {
+  cd libcutefish
+  DESTDIR="$pkgdir" ninja install
+}

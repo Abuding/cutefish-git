@@ -1,0 +1,30 @@
+pkgname=cutefish-kwin-plugins-git
+pkgver=0.8.r0.g704e391
+pkgrel=1
+pkgdesc="CutefishOS KWin Plugins"
+arch=('x86_64')
+url="https://github.com/cutefishos/kwin-plugins"
+license=('GPL')
+groups=('cutefish-git')
+depends=()
+makedepends=('git' 'cmake' 'ninja' 'qt5-base' 'kcoreaddons' 'kwindowsystem' 'kconfig' 'kdecoration' 'kwin')
+provides=('cutefish-kwin-plugins')
+conflicts=('cutefish-kwin-plugins')
+source=("git+https://github.com/Abuding/kwin-plugins.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd kwin-plugins
+  git describe --tags --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd kwin-plugins
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr .
+  ninja
+}
+
+package() {
+  cd kwin-plugins
+  DESTDIR="$pkgdir" ninja install
+}

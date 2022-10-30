@@ -1,0 +1,30 @@
+pkgname=cutefish-filemanager-git
+pkgver=0.8.r2.g03f44ef
+pkgrel=1
+pkgdesc="Cutefish File Manager, simple to use, beautiful, and retain the classic PC interactive design"
+arch=('x86_64')
+url="https://github.com/cutefishos/filemanager"
+license=('GPL')
+groups=('cutefish-git')
+depends=('kio')
+makedepends=('git' 'cmake' 'qt5-base' 'qt5-declarative' 'qt5-tools')
+provides=('cutefish-filemanager')
+conflicts=('cutefish-filemanager')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd filemanager
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd filemanager
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd filemanager
+  make DESTDIR="$pkgdir" install
+}

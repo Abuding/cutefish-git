@@ -1,0 +1,29 @@
+pkgname=fishui-git
+pkgver=0.8.r3.g41d4ba1
+pkgrel=1
+pkgdesc="GUI library based on QQC2 for Cutefish applications"
+arch=('x86_64')
+url="https://github.com/cutefishos/fishui"
+license=('GPL')
+depends=('qt5-declarative' 'kwindowsystem')
+makedepends=('git' 'cmake' 'ninja' 'qt5-base' 'qt5-quickcontrols2' 'qt5-x11extras' 'extra-cmake-modules')
+provides=('fishui')
+conflicts=('fishui')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd fishui
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd fishui
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr .
+  ninja
+}
+
+package() {
+  cd fishui
+  DESTDIR="$pkgdir" ninja install
+}

@@ -1,0 +1,30 @@
+pkgname=cutefish-wallpapers-git
+pkgver=1.0.r0.g1db69e1
+pkgrel=1
+pkgdesc="CutefishOS's system wallpaper"
+arch=('any')
+url="https://github.com/cutefishos/wallpapers"
+license=('GPL')
+groups=('cutefish-git')
+depends=()
+makedepends=('cmake' 'ninja' 'git')
+provides=('cutefish-wallpapers')
+conflicts=('cutefish-wallpapers')
+source=("git+$url.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd wallpapers
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd wallpapers
+  cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr .
+  ninja
+}
+
+package() {
+  cd wallpapers
+  DESTDIR="$pkgdir" ninja install
+}
